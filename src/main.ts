@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
+import axios from 'axios';
 
 import { IonicVue } from '@ionic/vue';
 
@@ -33,6 +34,21 @@ import '@ionic/vue/css/palettes/dark.system.css';
 
 /* Theme variables */
 import './theme/variables.css';
+
+
+// Konfiguriere Axios für Laravel Sail (stateless)
+axios.defaults.baseURL = 'http://localhost'; // Laravel Sail läuft normalerweise auf Port 80
+// axios.defaults.withCredentials = true; // Nicht benötigt für stateless Bearer-Token
+
+// Füge Interceptor hinzu um Auth-Token zu jeder Anfrage hinzuzufügen
+axios.interceptors.request.use((config) => {
+  const token = localStorage.getItem('auth_token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 
 const app = createApp(App)
   .use(IonicVue)
