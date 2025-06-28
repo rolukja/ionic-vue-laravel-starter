@@ -46,7 +46,6 @@ export default {
         this.$router.push('/home');
       } catch (error) {
         this.error = error.response?.data?.error || 'Login failed';
-        console.log('Login Error:', error.response?.data);
       }
     },
   },

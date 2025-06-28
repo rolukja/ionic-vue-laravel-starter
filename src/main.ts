@@ -42,22 +42,13 @@ axios.defaults.baseURL = API_CONFIG.baseURL;
 axios.defaults.timeout = API_CONFIG.timeout;
 // axios.defaults.withCredentials = API_CONFIG.withCredentials; // Nicht benötigt für stateless Bearer-Token
 
-// Debug-Logging falls aktiviert
-if (API_CONFIG.debug) {
-  console.log('API Configuration:', API_CONFIG);
-}
-
 // Füge Interceptor hinzu um Auth-Token zu jeder Anfrage hinzuzufügen
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem('auth_token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
-  
-  // Debug-Logging für Requests
-  if (API_CONFIG.debug) {
-    console.log('API Request:', config);
-  }
+
   
   return config;
 });
@@ -65,9 +56,6 @@ axios.interceptors.request.use((config) => {
 // Response Interceptor für Debug-Logging
 axios.interceptors.response.use(
   (response) => {
-    if (API_CONFIG.debug) {
-      console.log('API Response:', response);
-    }
     return response;
   },
   (error) => {

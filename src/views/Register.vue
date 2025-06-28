@@ -108,7 +108,6 @@ export default {
         this.$router.push('/home');
       } catch (error) {
         this.error = error.response?.data?.message || 'Registration failed';
-        console.log('Registration Error:', error.response?.data);
       }
     },
   },
