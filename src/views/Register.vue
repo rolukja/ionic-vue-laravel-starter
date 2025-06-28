@@ -56,61 +56,42 @@
   </ion-page>
 </template>
 
-<script>
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { IonPage, IonContent, IonItem, IonLabel, IonInput, IonButton, IonText, IonIcon } from '@ionic/vue';
 import axios from 'axios';
 import { API_ENDPOINTS } from '../config/api';
 import { walletOutline } from 'ionicons/icons';
 
-export default {
-  components: {
-    IonPage,
-    IonContent,
-    IonItem,
-    IonLabel,
-    IonInput,
-    IonButton,
-    IonText,
-    IonIcon,
-  },
-  setup() {
-    return {
-      walletOutline,
-    };
-  },
-  data() {
-    return {
-      name: '',
-      email: '',
-      password: '',
-      password_confirmation: '',
-      error: null,
-    };
-  },
-  methods: {
-    async register() {
-      try {
-        this.error = null;
-        
-        // Sende Registrierungsanfrage direkt ohne CSRF-Cookie
-        const response = await axios.post(API_ENDPOINTS.REGISTER, {
-          name: this.name,
-          email: this.email,
-          password: this.password,
-          password_confirmation: this.password_confirmation,
-        });
+const router = useRouter();
+const name = ref('');
+const email = ref('');
+const password = ref('');
+const password_confirmation = ref('');
+const error = ref<string | null>(null);
 
-        // Speichere Token und Benutzerdaten
-        localStorage.setItem('auth_token', response.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.user));
+const register = async () => {
+  try {
+    error.value = null;
+    
+    // Sende Registrierungsanfrage direkt ohne CSRF-Cookie
+    const response = await axios.post(API_ENDPOINTS.REGISTER, {
+      name: name.value,
+      email: email.value,
+      password: password.value,
+      password_confirmation: password_confirmation.value,
+    });
 
-        // Weiterleitung zur Home-Seite
-        this.$router.push('/home');
-      } catch (error) {
-        this.error = error.response?.data?.message || 'Registration failed';
-      }
-    },
-  },
+    // Speichere Token und Benutzerdaten
+    localStorage.setItem('auth_token', response.data.token);
+    localStorage.setItem('user', JSON.stringify(response.data.user));
+
+    // Weiterleitung zur Home-Seite
+    router.push('/home');
+  } catch (err: any) {
+    error.value = err.response?.data?.message || 'Registration failed';
+  }
 };
 </script>
 

@@ -30,7 +30,9 @@
   </ion-page>
 </template>
 
-<script>
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { 
   IonPage, 
   IonHeader, 
@@ -55,67 +57,37 @@ import axios from 'axios';
 import { API_ENDPOINTS } from '../config/api';
 import { gridOutline } from 'ionicons/icons';
 
-export default {
-  components: {
-    IonPage,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonContent,
-    IonCard,
-    IonCardHeader,
-    IonCardTitle,
-    IonCardSubtitle,
-    IonCardContent,
-    IonButton,
-    IonText,
-    IonButtons,
-    IonMenuButton,
-    IonIcon,
-    IonGrid,
-    IonRow,
-    IonCol,
-  },
-  setup() {
-    return {
-      gridOutline,
-    };
-  },
-  data() {
-    return {
-      user: null,
-      error: null,
-    };
-  },
-  async mounted() {
-    await this.fetchUser();
-  },
-  methods: {
-    async fetchUser() {
-      try {
-        const token = localStorage.getItem('auth_token');
-        if (!token) {
-          this.error = 'No auth token found';
-          this.$router.push('/login');
-          return;
-        }
+const router = useRouter();
+const user = ref<any>(null);
+const error = ref<string | null>(null);
 
-        const response = await axios.get(API_ENDPOINTS.USER, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+const fetchUser = async () => {
+  try {
+    const token = localStorage.getItem('auth_token');
+    if (!token) {
+      error.value = 'No auth token found';
+      router.push('/login');
+      return;
+    }
 
-        this.user = response.data;
-      } catch (error) {
-        this.error = error.response?.data?.message || 'Failed to fetch user';
-        localStorage.removeItem('auth_token');
-        localStorage.removeItem('user');
-        this.$router.push('/login');
-      }
-    },
-  },
+    const response = await axios.get(API_ENDPOINTS.USER, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    user.value = response.data;
+  } catch (err: any) {
+    error.value = err.response?.data?.message || 'Failed to fetch user';
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('user');
+    router.push('/login');
+  }
 };
+
+onMounted(async () => {
+  await fetchUser();
+});
 </script>
 
 <style scoped>

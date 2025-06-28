@@ -1,57 +1,3 @@
-<script>
-import { IonPage, IonContent, IonItem, IonLabel, IonInput, IonButton, IonText, IonIcon } from '@ionic/vue';
-import axios from 'axios';
-import { API_ENDPOINTS } from '../config/api';
-import { walletOutline } from 'ionicons/icons';
-
-export default {
-  components: {
-    IonPage,
-    IonContent,
-    IonItem,
-    IonLabel,
-    IonInput,
-    IonButton,
-    IonText,
-    IonIcon,
-  },
-  setup() {
-    return {
-      walletOutline,
-    };
-  },
-  data() {
-    return {
-      email: '',
-      password: '',
-      error: null,
-    };
-  },
-  methods: {
-    async login() {
-      try {
-        this.error = null;
-        
-        // Sende Login-Anfrage direkt ohne CSRF-Cookie
-        const response = await axios.post(API_ENDPOINTS.LOGIN, {
-          email: this.email,
-          password: this.password,
-        });
-
-        // Speichere Token (z. B. in localStorage oder Ionic Storage)
-        localStorage.setItem('auth_token', response.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.user));
-
-        // Weiterleitung zur Home-Seite
-        this.$router.push('/home');
-      } catch (error) {
-        this.error = error.response?.data?.error || 'Login failed';
-      }
-    },
-  },
-};
-</script>
-
 <template>
   <ion-page>
     <ion-content class="ion-padding" fullscreen>
@@ -62,18 +8,15 @@ export default {
             <h1>My App</h1>
             <p>Sign in to your account</p>
           </div>
-          
           <div class="form-section">
             <ion-item lines="inset" class="input-item">
               <ion-label position="floating">Email</ion-label>
               <ion-input v-model="email" type="email" autocomplete="email"></ion-input>
             </ion-item>
-            
             <ion-item lines="inset" class="input-item">
               <ion-label position="floating">Password</ion-label>
               <ion-input v-model="password" type="password" autocomplete="current-password"></ion-input>
             </ion-item>
-            
             <ion-button 
               expand="block" 
               @click="login" 
@@ -82,14 +25,12 @@ export default {
             >
               Sign In
             </ion-button>
-            
             <div class="register-link">
               <p>Don't have an account?</p>
               <ion-button fill="clear" router-link="/register">
                 Create Account
               </ion-button>
             </div>
-            
             <ion-text color="danger" v-if="error" class="error-text">
               {{ error }}
             </ion-text>
@@ -99,6 +40,35 @@ export default {
     </ion-content>
   </ion-page>
 </template>
+
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { IonPage, IonContent, IonItem, IonLabel, IonInput, IonButton, IonText, IonIcon } from '@ionic/vue';
+import axios from 'axios';
+import { API_ENDPOINTS } from '../config/api';
+import { walletOutline } from 'ionicons/icons';
+
+const email = ref('');
+const password = ref('');
+const error = ref<string|null>(null);
+const router = useRouter();
+
+async function login() {
+  error.value = null;
+  try {
+    const response = await axios.post(API_ENDPOINTS.LOGIN, {
+      email: email.value,
+      password: password.value,
+    });
+    localStorage.setItem('auth_token', response.data.token);
+    localStorage.setItem('user', JSON.stringify(response.data.user));
+    router.push('/home');
+  } catch (err: any) {
+    error.value = err.response?.data?.error || 'Login failed';
+  }
+}
+</script>
 
 <style scoped>
 .login-container {
