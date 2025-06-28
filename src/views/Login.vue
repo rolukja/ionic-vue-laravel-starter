@@ -4,7 +4,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { IonPage, IonContent, IonItem, IonLabel, IonInput, IonButton, IonText, IonIcon } from '@ionic/vue';
 import axios from 'axios';
-import {API_CONFIG, API_ENDPOINTS} from '../config/api';
+import {API_ENDPOINTS} from '../config/api';
 import { walletOutline } from 'ionicons/icons';
 
 const email = ref('');
@@ -13,8 +13,6 @@ const error = ref<string|null>(null);
 const router = useRouter();
 const env = import.meta.env;
 
-
-console.log(env);
 
 async function login() {
   error.value = null;
@@ -126,44 +124,46 @@ async function login() {
 
 .input-item {
   margin-bottom: 1rem;
-  border-radius: 12px;
+  border-radius: 0rem;
   --background: rgba(255, 255, 255, 1);
   --color: var(--ion-color-dark);
   --placeholder-color: var(--ion-color-medium);
   --border-color: rgba(0, 0, 0, 0.1);
+  --padding-start: 0;
+  --inner-padding-end: 0;
 }
 
 .input-item ion-label {
-  color: var(--ion-color-medium) !important;
+color: var(--ion-color-medium) !important;
 }
 
 .input-item ion-input {
-  --color: var(--ion-color-dark) !important;
-  --placeholder-color: var(--ion-color-medium) !important;
+--color: var(--ion-color-dark) !important;
+--placeholder-color: var(--ion-color-medium) !important;
 }
 
 .login-button {
-  margin: 1.5rem 0 1rem 0;
-  --border-radius: 12px;
-  height: 50px;
+margin: 1.5rem 0 1rem 0;
+--border-radius: 12px;
+height: 50px;
 }
 
 .register-link {
-  text-align: center;
-  margin-top: 1rem;
+text-align: center;
+margin-top: 1rem;
 }
 
 .register-link p {
-  margin: 0;
-  color: var(--ion-color-medium);
-  font-size: 0.9rem;
+margin: 0;
+color: var(--ion-color-medium);
+font-size: 0.9rem;
 }
 
 .error-text {
-  display: block;
-  text-align: center;
-  margin-top: 1rem;
-  font-size: 0.9rem;
+display: block;
+text-align: center;
+margin-top: 1rem;
+font-size: 0.9rem;
 }
 
 /* Responsive Design */
@@ -172,11 +172,11 @@ async function login() {
     margin: 1rem;
     padding: 1.5rem;
   }
-  
+
   .logo-icon {
     font-size: 3rem;
   }
-  
+
   .logo-section h1 {
     font-size: 1.8rem;
   }

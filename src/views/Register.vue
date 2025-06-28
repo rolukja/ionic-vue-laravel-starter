@@ -1,3 +1,43 @@
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { IonPage, IonContent, IonItem, IonLabel, IonInput, IonButton, IonText, IonIcon } from '@ionic/vue';
+import axios from 'axios';
+import { API_ENDPOINTS } from '../config/api';
+import { walletOutline } from 'ionicons/icons';
+
+const router = useRouter();
+const name = ref('');
+const email = ref('');
+const password = ref('');
+const password_confirmation = ref('');
+const error = ref<string | null>(null);
+const env = import.meta.env;
+
+const register = async () => {
+  try {
+    error.value = null;
+
+    // Sende Registrierungsanfrage direkt ohne CSRF-Cookie
+    const response = await axios.post(API_ENDPOINTS.REGISTER, {
+      name: name.value,
+      email: email.value,
+      password: password.value,
+      password_confirmation: password_confirmation.value,
+    });
+
+    // Speichere Token und Benutzerdaten
+    localStorage.setItem('auth_token', response.data.token);
+    localStorage.setItem('user', JSON.stringify(response.data.user));
+
+    // Weiterleitung zur Home-Seite
+    router.push('/home');
+  } catch (err: any) {
+    error.value = err.response?.data?.message || 'Registration failed';
+  }
+};
+</script>
+
 <template>
   <ion-page>
     <ion-content class="ion-padding" fullscreen>
@@ -5,7 +45,7 @@
         <div class="register-card">
           <div class="logo-section">
             <ion-icon :icon="walletOutline" class="logo-icon"></ion-icon>
-            <h1>Join My App</h1>
+            <h1>{{env.VITE_APP_NAME}}</h1>
             <p>Create your account</p>
           </div>
           
@@ -56,44 +96,7 @@
   </ion-page>
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { IonPage, IonContent, IonItem, IonLabel, IonInput, IonButton, IonText, IonIcon } from '@ionic/vue';
-import axios from 'axios';
-import { API_ENDPOINTS } from '../config/api';
-import { walletOutline } from 'ionicons/icons';
 
-const router = useRouter();
-const name = ref('');
-const email = ref('');
-const password = ref('');
-const password_confirmation = ref('');
-const error = ref<string | null>(null);
-
-const register = async () => {
-  try {
-    error.value = null;
-    
-    // Sende Registrierungsanfrage direkt ohne CSRF-Cookie
-    const response = await axios.post(API_ENDPOINTS.REGISTER, {
-      name: name.value,
-      email: email.value,
-      password: password.value,
-      password_confirmation: password_confirmation.value,
-    });
-
-    // Speichere Token und Benutzerdaten
-    localStorage.setItem('auth_token', response.data.token);
-    localStorage.setItem('user', JSON.stringify(response.data.user));
-
-    // Weiterleitung zur Home-Seite
-    router.push('/home');
-  } catch (err: any) {
-    error.value = err.response?.data?.message || 'Registration failed';
-  }
-};
-</script>
 
 <style scoped>
 .register-container {
