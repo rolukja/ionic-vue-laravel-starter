@@ -40,6 +40,8 @@ import './theme/variables.css';
 // Konfiguriere Axios mit dynamischer API-Konfiguration
 axios.defaults.baseURL = API_CONFIG.baseURL;
 axios.defaults.timeout = API_CONFIG.timeout;
+axios.defaults.headers.common['Accept'] = 'application/json';
+axios.defaults.headers.post['Content-Type'] = 'application/json';
 // axios.defaults.withCredentials = API_CONFIG.withCredentials; // Nicht benötigt für stateless Bearer-Token
 
 // Füge Interceptor hinzu um Auth-Token zu jeder Anfrage hinzuzufügen

@@ -20,8 +20,9 @@ return [
     'allowed_methods' => ['*'],
 
     'allowed_origins' => [
-        'http://localhost:8100', 
-        'http://127.0.0.1:8100', 
+        'http://localhost:8100',
+        'http://46.232.248.112:85',
+        'http://127.0.0.1:8100',
         'http://localhost:3000',
         'http://localhost:8080',
         'capacitor://localhost',
@@ -38,6 +39,6 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => true,
+    'supports_credentials' => false,
 
-]; 
+];

@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -17,14 +16,19 @@ const env = import.meta.env;
 async function login() {
   error.value = null;
   try {
+    console.log('Sending login request to:', API_ENDPOINTS.LOGIN);
     const response = await axios.post(API_ENDPOINTS.LOGIN, {
       email: email.value,
       password: password.value,
     });
+    console.log('Login response:', response);
+    console.log('Response data:', response.data);
+    
     localStorage.setItem('auth_token', response.data.token);
     localStorage.setItem('user', JSON.stringify(response.data.user));
     router.push('/home');
   } catch (err: any) {
+    console.error('Login error:', err);
     error.value = err.response?.data?.error || 'Login failed';
   }
 }

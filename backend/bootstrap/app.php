@@ -16,11 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
         ]);
         
-        // CORS für Web und API
-        $middleware->web(append: [
-            \Illuminate\Http\Middleware\HandleCors::class,
-        ]);
-        
+        // CORS für API aktiviert
         $middleware->api(append: [
             \Illuminate\Http\Middleware\HandleCors::class,
         ]);
