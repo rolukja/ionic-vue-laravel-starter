@@ -15,13 +15,7 @@
           <ion-card-subtitle>Your Personal Dashboard</ion-card-subtitle>
         </ion-card-header>
         <ion-card-content>
-          <p><strong>Email:</strong> {{ user.email }}</p>
-          <p>Welcome to your personal application dashboard.</p>
-          
-          <ion-button expand="block" router-link="/dashboard" fill="outline">
-            <ion-icon slot="start" :icon="gridOutline"></ion-icon>
-            Open Dashboard
-          </ion-button>
+          <p>Welcome to your application.</p>
         </ion-card-content>
       </ion-card>
       

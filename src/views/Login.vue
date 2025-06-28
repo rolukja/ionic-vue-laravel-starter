@@ -1,3 +1,38 @@
+
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { IonPage, IonContent, IonItem, IonLabel, IonInput, IonButton, IonText, IonIcon } from '@ionic/vue';
+import axios from 'axios';
+import {API_CONFIG, API_ENDPOINTS} from '../config/api';
+import { walletOutline } from 'ionicons/icons';
+
+const email = ref('');
+const password = ref('');
+const error = ref<string|null>(null);
+const router = useRouter();
+const env = import.meta.env;
+
+
+console.log(env);
+
+async function login() {
+  error.value = null;
+  try {
+    const response = await axios.post(API_ENDPOINTS.LOGIN, {
+      email: email.value,
+      password: password.value,
+    });
+    localStorage.setItem('auth_token', response.data.token);
+    localStorage.setItem('user', JSON.stringify(response.data.user));
+    router.push('/home');
+  } catch (err: any) {
+    error.value = err.response?.data?.error || 'Login failed';
+  }
+}
+</script>
+
+
 <template>
   <ion-page>
     <ion-content class="ion-padding" fullscreen>
@@ -5,7 +40,7 @@
         <div class="login-card">
           <div class="logo-section">
             <ion-icon :icon="walletOutline" class="logo-icon"></ion-icon>
-            <h1>My App</h1>
+            <h1>{{env.VITE_APP_NAME}}</h1>
             <p>Sign in to your account</p>
           </div>
           <div class="form-section">
@@ -41,34 +76,7 @@
   </ion-page>
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { IonPage, IonContent, IonItem, IonLabel, IonInput, IonButton, IonText, IonIcon } from '@ionic/vue';
-import axios from 'axios';
-import { API_ENDPOINTS } from '../config/api';
-import { walletOutline } from 'ionicons/icons';
 
-const email = ref('');
-const password = ref('');
-const error = ref<string|null>(null);
-const router = useRouter();
-
-async function login() {
-  error.value = null;
-  try {
-    const response = await axios.post(API_ENDPOINTS.LOGIN, {
-      email: email.value,
-      password: password.value,
-    });
-    localStorage.setItem('auth_token', response.data.token);
-    localStorage.setItem('user', JSON.stringify(response.data.user));
-    router.push('/home');
-  } catch (err: any) {
-    error.value = err.response?.data?.error || 'Login failed';
-  }
-}
-</script>
 
 <style scoped>
 .login-container {
