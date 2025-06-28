@@ -32,6 +32,7 @@
 <script>
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonLabel, IonInput, IonButton, IonText } from '@ionic/vue';
 import axios from 'axios';
+import { API_ENDPOINTS } from '../config/api';
 
 export default {
   components: {
@@ -59,7 +60,7 @@ export default {
     async register() {
       try {
         // Sende Registrierungsanfrage direkt ohne CSRF-Cookie
-        const response = await axios.post('/api/register', {
+        const response = await axios.post(API_ENDPOINTS.REGISTER, {
           name: this.name,
           email: this.email,
           password: this.password,

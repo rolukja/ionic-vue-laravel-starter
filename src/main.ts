@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
 import axios from 'axios';
+import { API_CONFIG } from './config/api';
 
 import { IonicVue } from '@ionic/vue';
 
@@ -36,9 +37,15 @@ import '@ionic/vue/css/palettes/dark.system.css';
 import './theme/variables.css';
 
 
-// Konfiguriere Axios für Laravel Sail (stateless)
-axios.defaults.baseURL = 'http://localhost'; // Laravel Sail läuft normalerweise auf Port 80
-// axios.defaults.withCredentials = true; // Nicht benötigt für stateless Bearer-Token
+// Konfiguriere Axios mit dynamischer API-Konfiguration
+axios.defaults.baseURL = API_CONFIG.baseURL;
+axios.defaults.timeout = API_CONFIG.timeout;
+// axios.defaults.withCredentials = API_CONFIG.withCredentials; // Nicht benötigt für stateless Bearer-Token
+
+// Debug-Logging falls aktiviert
+if (API_CONFIG.debug) {
+  console.log('API Configuration:', API_CONFIG);
+}
 
 // Füge Interceptor hinzu um Auth-Token zu jeder Anfrage hinzuzufügen
 axios.interceptors.request.use((config) => {
@@ -46,9 +53,30 @@ axios.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+  
+  // Debug-Logging für Requests
+  if (API_CONFIG.debug) {
+    console.log('API Request:', config);
+  }
+  
   return config;
 });
 
+// Response Interceptor für Debug-Logging
+axios.interceptors.response.use(
+  (response) => {
+    if (API_CONFIG.debug) {
+      console.log('API Response:', response);
+    }
+    return response;
+  },
+  (error) => {
+    if (API_CONFIG.debug) {
+      console.error('API Error:', error);
+    }
+    return Promise.reject(error);
+  }
+);
 
 const app = createApp(App)
   .use(IonicVue)

@@ -23,6 +23,7 @@
 <script>
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonButton, IonText } from '@ionic/vue';
 import axios from 'axios';
+import { API_ENDPOINTS } from '../config/api';
 
 export default {
   components: {
@@ -57,7 +58,7 @@ export default {
           return;
         }
 
-        const response = await axios.get('/api/user', {
+        const response = await axios.get(API_ENDPOINTS.USER, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -74,7 +75,7 @@ export default {
     async logout() {
       try {
         const token = localStorage.getItem('auth_token');
-        await axios.post('/api/logout', {}, {
+        await axios.post(API_ENDPOINTS.LOGOUT, {}, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

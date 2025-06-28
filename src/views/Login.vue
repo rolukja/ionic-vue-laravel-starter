@@ -1,6 +1,7 @@
 <script>
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonLabel, IonInput, IonButton, IonText } from '@ionic/vue';
 import axios from 'axios';
+import { API_ENDPOINTS } from '../config/api';
 
 export default {
   components: {
@@ -26,7 +27,7 @@ export default {
     async login() {
       try {
         // Sende Login-Anfrage direkt ohne CSRF-Cookie
-        const response = await axios.post('/api/login', {
+        const response = await axios.post(API_ENDPOINTS.LOGIN, {
           email: this.email,
           password: this.password,
         });
