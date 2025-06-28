@@ -2,6 +2,9 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-menu-button color="primary"></ion-menu-button>
+        </ion-buttons>
         <ion-title>Home</ion-title>
       </ion-toolbar>
     </ion-header>
@@ -9,21 +12,72 @@
       <ion-card v-if="user">
         <ion-card-header>
           <ion-card-title>Welcome, {{ user.name }}!</ion-card-title>
+          <ion-card-subtitle>Your Personal Dashboard</ion-card-subtitle>
         </ion-card-header>
         <ion-card-content>
-          <p>Email: {{ user.email }}</p>
-          <ion-button expand="block" color="danger" @click="logout">Logout</ion-button>
+          <p><strong>Email:</strong> {{ user.email }}</p>
+          <p>Welcome to your personal application dashboard.</p>
+          
+          <ion-button expand="block" router-link="/dashboard" fill="outline">
+            <ion-icon slot="start" :icon="gridOutline"></ion-icon>
+            Open Dashboard
+          </ion-button>
         </ion-card-content>
       </ion-card>
+      
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Quick Overview</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="6">
+                <div class="stat-item">
+                  <h3>0</h3>
+                  <p>Total Items</p>
+                </div>
+              </ion-col>
+              <ion-col size="6">
+                <div class="stat-item">
+                  <h3>0</h3>
+                  <p>Categories</p>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card-content>
+      </ion-card>
+      
       <ion-text color="danger" v-if="error">{{ error }}</ion-text>
     </ion-content>
   </ion-page>
 </template>
 
 <script>
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonButton, IonText } from '@ionic/vue';
+import { 
+  IonPage, 
+  IonHeader, 
+  IonToolbar, 
+  IonTitle, 
+  IonContent, 
+  IonCard, 
+  IonCardHeader, 
+  IonCardTitle, 
+  IonCardSubtitle,
+  IonCardContent, 
+  IonButton, 
+  IonText,
+  IonButtons,
+  IonMenuButton,
+  IonIcon,
+  IonGrid,
+  IonRow,
+  IonCol
+} from '@ionic/vue';
 import axios from 'axios';
 import { API_ENDPOINTS } from '../config/api';
+import { gridOutline } from 'ionicons/icons';
 
 export default {
   components: {
@@ -35,9 +89,21 @@ export default {
     IonCard,
     IonCardHeader,
     IonCardTitle,
+    IonCardSubtitle,
     IonCardContent,
     IonButton,
     IonText,
+    IonButtons,
+    IonMenuButton,
+    IonIcon,
+    IonGrid,
+    IonRow,
+    IonCol,
+  },
+  setup() {
+    return {
+      gridOutline,
+    };
   },
   data() {
     return {
@@ -72,25 +138,24 @@ export default {
         this.$router.push('/login');
       }
     },
-    async logout() {
-      try {
-        const token = localStorage.getItem('auth_token');
-        await axios.post(API_ENDPOINTS.LOGOUT, {}, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        localStorage.removeItem('auth_token');
-        localStorage.removeItem('user');
-        this.$router.push('/login');
-      } catch (error) {
-        this.error = error.response?.data?.message || 'Logout failed';
-        localStorage.removeItem('auth_token');
-        localStorage.removeItem('user');
-        this.$router.push('/login');
-      }
-    },
   },
 };
 </script>
+
+<style scoped>
+.stat-item {
+  text-align: center;
+}
+
+.stat-item h3 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0;
+  color: var(--ion-color-primary);
+}
+
+.stat-item p {
+  margin: 0;
+  color: var(--ion-color-medium);
+}
+</style>
