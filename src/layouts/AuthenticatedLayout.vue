@@ -80,12 +80,6 @@ const appPages = [
     mdIcon: homeSharp,
   },
   {
-    title: 'Dashboard',
-    url: '/dashboard',
-    iosIcon: walletOutline,
-    mdIcon: walletSharp,
-  },
-  {
     title: 'Settings',
     url: '/settings',
     iosIcon: settingsOutline,

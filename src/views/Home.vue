@@ -25,30 +25,6 @@
         </ion-card-content>
       </ion-card>
       
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title>Quick Overview</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-          <ion-grid>
-            <ion-row>
-              <ion-col size="6">
-                <div class="stat-item">
-                  <h3>0</h3>
-                  <p>Total Items</p>
-                </div>
-              </ion-col>
-              <ion-col size="6">
-                <div class="stat-item">
-                  <h3>0</h3>
-                  <p>Categories</p>
-                </div>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
-        </ion-card-content>
-      </ion-card>
-      
       <ion-text color="danger" v-if="error">{{ error }}</ion-text>
     </ion-content>
   </ion-page>
