@@ -1,6 +1,3 @@
-#### 🚀 Ionic Vue + Laravel API • Full-Stack Starter Kit
-
-
 # Ionic Vue Laravel Starter Kit
 
 A modern **Full-Stack Starter Kit** for Cross-Platform Apps that combines:
@@ -42,7 +39,7 @@ A modern **Full-Stack Starter Kit** for Cross-Platform Apps that combines:
 
 ### 1. Clone Repository
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/rolukja/ionic-vue-laravel-starter
 cd ionic-vue-laravel-starter
 ```
 
