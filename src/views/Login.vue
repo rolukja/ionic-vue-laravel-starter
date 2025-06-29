@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { IonPage, IonContent, IonItem, IonLabel, IonInput, IonButton, IonText, IonIcon } from '@ionic/vue';
 import axios from 'axios';
-import {API_ENDPOINTS} from '../config/api';
+import {API_CONFIG, API_ENDPOINTS} from '../config/api';
 import { walletOutline } from 'ionicons/icons';
 
 const email = ref('');
@@ -11,27 +11,60 @@ const password = ref('');
 const error = ref<string|null>(null);
 const router = useRouter();
 const env = import.meta.env;
+const loading = ref(false);
 
+const login = async () => {
+  if (!email.value || !password.value) {
+    error.value = 'Bitte füllen Sie alle Felder aus.';
+    return;
+  }
 
-async function login() {
-  error.value = null;
+  loading.value = true;
+  error.value = '';
+
   try {
-    console.log('Sending login request to:', API_ENDPOINTS.LOGIN);
-    const response = await axios.post(API_ENDPOINTS.LOGIN, {
+         console.log('🔐 Starting login with API URL:', API_CONFIG.baseURL);
+     console.log('📧 Email:', email.value);
+     console.log('🌐 Full API URL:', `${API_CONFIG.baseURL}/api/login`);
+    
+    const response = await axios.post('/api/login', {
       email: email.value,
       password: password.value,
     });
-    console.log('Login response:', response);
-    console.log('Response data:', response.data);
+
+    console.log('✅ Login successful:', response.data);
     
-    localStorage.setItem('auth_token', response.data.token);
-    localStorage.setItem('user', JSON.stringify(response.data.user));
-    router.push('/home');
+    if (response.data.token) {
+      localStorage.setItem('auth_token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      router.push('/home');
+    }
   } catch (err: any) {
-    console.error('Login error:', err);
-    error.value = err.response?.data?.error || 'Login failed';
+    console.error('❌ Login error details:', {
+      message: err.message,
+      response: err.response?.data,
+      status: err.response?.status,
+      config: {
+        url: err.config?.url,
+        method: err.config?.method,
+        baseURL: err.config?.baseURL,
+        headers: err.config?.headers
+      }
+    });
+    
+    if (err.response?.data?.message) {
+      error.value = err.response.data.message;
+    } else if (err.response?.status === 401) {
+      error.value = 'Ungültige Anmeldedaten.';
+    } else if (err.code === 'ERR_NETWORK') {
+      error.value = `Netzwerkfehler: Kann Server nicht erreichen (${API_CONFIG.baseURL})`;
+    } else {
+      error.value = 'Login fehlgeschlagen. Bitte versuchen Sie es erneut.';
+    }
+  } finally {
+    loading.value = false;
   }
-}
+};
 </script>
 
 

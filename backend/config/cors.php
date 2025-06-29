@@ -20,18 +20,30 @@ return [
     'allowed_methods' => ['*'],
 
     'allowed_origins' => [
+        // Entwicklungsumgebung
         'http://localhost:8100',
-        'http://46.232.248.112:85',
         'http://127.0.0.1:8100',
         'http://localhost:3000',
         'http://localhost:8080',
+        'http://192.168.178.22:8100',  // Für mobile Geräte im lokalen Netzwerk
+        
+        // Capacitor/Ionic Mobile App
         'capacitor://localhost',
         'ionic://localhost',
         'http://localhost',
-        'https://localhost'
+        'https://localhost',
+        
+        // Produktionsumgebung
+        'http://v2202505272384340111.bestsrv.de:85',
+        'http://46.232.248.112:85',
+        'http://myapp.de',
     ],
 
-    'allowed_origins_patterns' => [],
+    'allowed_origins_patterns' => [
+        // Nur für Entwicklung/Testing - NICHT für Produktion verwenden!
+        // '/^capacitor:\/\/.*/',
+        // '/^ionic:\/\/.*/',
+    ],
 
     'allowed_headers' => ['*'],
 
