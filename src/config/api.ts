@@ -1,4 +1,5 @@
 // API-Konfiguration für das Laravel Backend
+import { CapacitorHttp } from '@capacitor/core';
 
 // Environment-basierte API-URLs
 const getApiBaseUrl = () => {
@@ -36,6 +37,33 @@ console.log('🚀 Final API Config:', API_CONFIG);
 // Helper-Funktion um die vollständige API-URL zu erhalten
 export const getApiUrl = (endpoint: string = '') => {
   return `${API_CONFIG.baseURL}${endpoint}`;
+};
+
+// Capacitor HTTP Helper für native Requests
+export const capacitorRequest = async (method: string, url: string, data?: any) => {
+  const token = localStorage.getItem('auth_token');
+  
+  const options = {
+    url: url.startsWith('http') ? url : getApiUrl(url),
+    method: method.toUpperCase(),
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      ...(token && { 'Authorization': `Bearer ${token}` })
+    },
+    ...(data && { data: JSON.stringify(data) })
+  };
+
+  console.log('🚀 Capacitor HTTP Request:', options);
+  
+  try {
+    const response = await CapacitorHttp.request(options);
+    console.log('✅ Capacitor HTTP Response:', response);
+    return response;
+  } catch (error) {
+    console.error('❌ Capacitor HTTP Error:', error);
+    throw error;
+  }
 };
 
 // API-Endpunkte als Konstanten

@@ -19,7 +19,17 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => [
+        // Capacitor/Ionic Mobile App
+        'capacitor://localhost',
+        'ionic://localhost',
+        'http://localhost',
+        'https://localhost',
+        
+        // Development
+        'http://localhost:8100',
+        'http://127.0.0.1:8100',
+    ],
 
     'allowed_origins_patterns' => [],
 

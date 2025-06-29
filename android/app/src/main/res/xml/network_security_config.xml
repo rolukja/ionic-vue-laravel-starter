@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Erlaube HTTP-Traffic für alle Domains -->
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system"/>
+        </trust-anchors>
+    </base-config>
+    
+    <!-- Spezifische Domains für Backend -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">46.232.248.112</domain>
+        <domain includeSubdomains="true">v2202505272384340111.bestsrv.de</domain>
+        <domain includeSubdomains="true">myapp.de</domain>
+        <domain includeSubdomains="false">localhost</domain>
+    </domain-config>
+</network-security-config> 

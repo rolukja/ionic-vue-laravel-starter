@@ -2,12 +2,18 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'io.ionic.starter',
-  "appName": "MyApp",
-  "webDir": "www",
-  "server": {
-    "url": "http://46.232.248.112:85",
-    "cleartext": true
-  }
+  appName: "MyApp",
+  webDir: "dist",
+  plugins: {
+    CapacitorHttp: {
+      enabled: true,
+    },
+  },
+  android: {
+    allowMixedContent: true,
+    captureInput: true,
+    webContentsDebuggingEnabled: true,
+  },
 };
 
 export default config;

@@ -2,8 +2,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { IonPage, IonContent, IonItem, IonLabel, IonInput, IonButton, IonText, IonIcon } from '@ionic/vue';
-import axios from 'axios';
-import {API_CONFIG, API_ENDPOINTS} from '../config/api';
+import { capacitorRequest, API_ENDPOINTS } from '../config/api';
 import { walletOutline } from 'ionicons/icons';
 
 const email = ref('');
@@ -23,41 +22,28 @@ const login = async () => {
   error.value = '';
 
   try {
-         console.log('🔐 Starting login with API URL:', API_CONFIG.baseURL);
-     console.log('📧 Email:', email.value);
-     console.log('🌐 Full API URL:', `${API_CONFIG.baseURL}/api/login`);
+    console.log('🔐 Starting login with Capacitor HTTP');
+    console.log('📧 Email:', email.value);
     
-    const response = await axios.post('/api/login', {
+    const response = await capacitorRequest('POST', API_ENDPOINTS.LOGIN, {
       email: email.value,
       password: password.value,
     });
 
     console.log('✅ Login successful:', response.data);
     
-    if (response.data.token) {
+    if (response.data?.token) {
       localStorage.setItem('auth_token', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data.user));
       router.push('/home');
     }
   } catch (err: any) {
-    console.error('❌ Login error details:', {
-      message: err.message,
-      response: err.response?.data,
-      status: err.response?.status,
-      config: {
-        url: err.config?.url,
-        method: err.config?.method,
-        baseURL: err.config?.baseURL,
-        headers: err.config?.headers
-      }
-    });
+    console.error('❌ Login error details:', err);
     
-    if (err.response?.data?.message) {
-      error.value = err.response.data.message;
-    } else if (err.response?.status === 401) {
+    if (err.data?.message) {
+      error.value = err.data.message;
+    } else if (err.status === 401) {
       error.value = 'Ungültige Anmeldedaten.';
-    } else if (err.code === 'ERR_NETWORK') {
-      error.value = `Netzwerkfehler: Kann Server nicht erreichen (${API_CONFIG.baseURL})`;
     } else {
       error.value = 'Login fehlgeschlagen. Bitte versuchen Sie es erneut.';
     }
