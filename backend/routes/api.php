@@ -10,3 +10,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+
+
+Route::get('/ping', fn () => response()->json([
+    'status'   => 'ok',
+    'time'     => now(),
+    'app_url'  => config('app.url'),
+]));
