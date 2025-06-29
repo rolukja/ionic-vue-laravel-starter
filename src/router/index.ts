@@ -35,7 +35,6 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/Settings.vue'),
     meta: { requiresAuth: true },
   },
-  { path: '/debug', component: () => import('../views/Debug.vue') }
 ];
 
 const router = createRouter({
