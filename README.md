@@ -147,3 +147,26 @@ Adjust `android/variables.gradle` before releasing.
 - ⏳ Comprehensive tests (Vitest + Cypress)
 
 Contributions are welcome 🙌 
+
+## NGINX Konfiguration example
+```bash
+server {
+listen 85;
+server_name youdomain.com;
+
+    root /www/project-folder/public;
+    index index.php index.html;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    include enable-php-84.conf;
+
+    location ~ ^/(\.env|\.git|\.svn|\.user\.ini|\.htaccess) { return 404; }
+
+    # -------------------------------- Logs -------------------------------------------
+    access_log /www/myapp.de.access.log;
+    error_log  /www/myapp.de.error.log;
+}
+```
